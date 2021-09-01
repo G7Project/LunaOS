@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>LunaOS</title>
+  <style>
+    body{
+      background:rgb(40,40,60);
+      color:white;
+      font-family:sans-serif;
+      min-height:100vh;
+      overflow:hidden;
+    }
+    #page-container {
+  position: relative;
+  min-height: 100vh;
+}
+
+#content-wrap {
+  padding-bottom: 3.0rem;    /* Footer height */
+}
+
+#taskbar {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 3.0rem;            /* Footer height */
+}
+    
+     #window0,#window1,#window2,#window3,#window4,#window5,#window6,#window7 {
+  position: absolute;
+  z-index: 9;
+  background-color: #f1f1f1;
+  color:black;
+  height:240px;
+  text-align: center;
+}
+
+#window0header,#window1header,#window2header,#window3header,#window4header,#window5header,#window6header,#window7header {
+  padding: 10px;
+  cursor: move;
+  z-index: 10;
+  width: 240px;
+  background-color: rgb(20,20,20);
+  text-align:left;
+  color: #fff;
+}
+  </style>
+</head>
+<body>
+  <div id="page-container">
+   <div id="content-wrap">
+     <!-- Now for the cool stuff. -->
+     <div id="window0">
+  <!-- Include a header DIV with the same name as the draggable DIV, followed by "header" -->
+  <div id="window0header">A Window That I Created</div>
+[your app is cool]
+</div>
+   </div>
+   <footer id="taskbar"></footer>
+</body>
+  <script>
+  // Make the DIV element draggable:
+_xwinspawnwindow(document.getElementById("window0"));
+
+function _xwinspawnwindow(elmnt) {
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  if (document.getElementById(elmnt.id + "header")) {
+    // if present, the header is where you move the DIV from:
+    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+  } else {
+    // otherwise, move the DIV from anywhere inside the DIV:
+    elmnt.onmousedown = dragMouseDown;
+  }
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = _xwindrag;
+  }
+
+  function _xwindrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY; 
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+  }
+
+  function closeDragElement() {
+    // stop moving when mouse button is released:
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+    
+
+    // Microlemur VFS API
+    function VFS(action,data,file){
+      if(action=='connect'){
+  let iframe = this.iframe = document.createElement('iframe');
+  iframe.style.display = 'none';
+  iframe.setAttribute('name', this.iframeName);
+  iframe.setAttribute('title', 'Hidden VFS Frame');
+  iframe.setAttribute('id', 'vfs_context');
+  iframe.setAttribute('width', '0');
+  iframe.setAttribute('height', '0');
+  iframe.setAttribute('border', '0');
+  iframe.setAttribute('src', data); // We need to set our VFS Server (Option to host a VFS Server is given.)
+      }
+      else if(action=='readfs'){}
+    } //Uses Server VFS Implementation to communicate
+  </script>
+</html>

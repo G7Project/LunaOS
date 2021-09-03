@@ -1,8 +1,11 @@
+
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
   <title>LunaOS</title>
   <style>
     body{
@@ -11,6 +14,7 @@
       font-family:sans-serif;
       min-height:100vh;
       overflow:hidden;
+      margin:0;
     }
     #page-container {
   position: relative;
@@ -18,19 +22,23 @@
 }
 
 #content-wrap {
-  padding-bottom: 3.0rem;    /* Footer height */
+  padding-bottom: 2.5rem;    /* Footer height */
 }
 
 #taskbar {
   position: absolute;
   bottom: 0;
+  left:0;
   width: 100%;
-  height: 3.0rem;            /* Footer height */
+  height: 2.5rem;
+  background:rgba(20,20,20,0.8);
+  user-select: none;
+  z-index:2;
 }
     
      #window0,#window1,#window2,#window3,#window4,#window5,#window6,#window7 {
   position: absolute;
-  z-index: 9;
+  z-index: 1;
   background-color: #f1f1f1;
   color:black;
   height:240px;
@@ -43,9 +51,18 @@
   z-index: 10;
   width: 240px;
   background-color: rgb(20,20,20);
-  text-align:left;
+  text-align:left; 
   color: #fff;
 }
+
+.taskbarico{
+ font-size:2.5rem;
+ user-select: none;
+    }
+.taskbarsmallico{
+      font-size:2.0rem;
+      user-select: none;
+    }
   </style>
 </head>
 <body>
@@ -58,7 +75,12 @@
 [your app is cool]
 </div>
    </div>
-   <footer id="taskbar"></footer>
+   <footer id="taskbar">
+     <span class="material-icons taskbarico">apps</span>
+     <span class="material-icons taskbarico" style='color:rgb(80,205,235);'>explore</span>
+     <span class="material-icons taskbarico" style='color:#FFF2B9;'>folder</span>
+     <span class="material-icons taskbarico" style='color:rgb(160,160,160);'>settings</span>
+    </footer>
 </body>
   <script>
   // Make the DIV element draggable:
@@ -87,7 +109,7 @@ function _xwinspawnwindow(elmnt) {
     e = e || window.event;
     e.preventDefault();
     pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY; 
+    pos2 = pos4 - e.clientY;
     pos3 = e.clientX;
     pos4 = e.clientY;
     elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
@@ -100,22 +122,5 @@ function _xwinspawnwindow(elmnt) {
     document.onmousemove = null;
   }
 }
-    
-
-    // Microlemur VFS API
-    function VFS(action,data,file){
-      if(action=='connect'){
-  let iframe = this.iframe = document.createElement('iframe');
-  iframe.style.display = 'none';
-  iframe.setAttribute('name', this.iframeName);
-  iframe.setAttribute('title', 'Hidden VFS Frame');
-  iframe.setAttribute('id', 'vfs_context');
-  iframe.setAttribute('width', '0');
-  iframe.setAttribute('height', '0');
-  iframe.setAttribute('border', '0');
-  iframe.setAttribute('src', data); // We need to set our VFS Server (Option to host a VFS Server is given.)
-      }
-      else if(action=='readfs'){}
-    } //Uses Server VFS Implementation to communicate
   </script>
 </html>

@@ -50,7 +50,6 @@
   resize: both;
   overflow: hidden;
 }
-
 #window0header,#window1header,#window2header,#window3header,#window4header,#window5header,#window6header,#window7header {
   padding: 10px;
   cursor: move;
@@ -94,11 +93,11 @@ border-color:darkred;
 background:darkred;
     }
 #XWinButton{
-background:rgb(60,60,60);
+background:rgb(165,60,60);
 border:none;
 color:white;
+border-radius:8px;
     }
-    /* Remove focus from Forms */
 input:focus,
 select:focus,
 textarea:focus,
@@ -108,11 +107,20 @@ button:focus {
 .bkgblack{
       background:rgb(10,10,10);
       opacity:0.8;
+      width:48px;
       border-radius:256px;
 }
 progress{
  border-radius:0px;
 }
+.filemgr_folder{
+color:#DDD2B9;
+font-size:48px;
+}
+.blur{
+        filter: blur(8px);
+  -webkit-filter: blur(8px);
+    }
   </style>
 </head>
   
@@ -129,6 +137,7 @@ progress{
        <div id="window0header" style='text-align:right;margin-left:-20px;'>
          SearchParty 1.0
          <button type='button' id='XWinButton' onclick='_xwinclosewindow(0,"searchParty")'>X</button>
+         
        </div>
        <div style='text-align:left;'>
   <input style='width:100%;margin-left:-2px;' id='_SEARCHPARTYURL'>
@@ -142,21 +151,41 @@ progress{
            Terminal
            <button type='button' id='XWinButton' onclick='_xwinclosewindow(1,"terminal")'>X</button>
            </div>
-           <div style='background:rgb(20,20,30);color:white;font-family:monospace;height:100%;text-align:left;'>
+           <div style='background:rgb(20,20,30);color:white;font-family:monospace;height:100%;text-align:left;opacity:0;'>
            </div>
          </div>
-      <div id='window2'>
+     <!-- File Manager (WIP) -->
+      <div id='window2' hidden>
              <div id="window2header" style='text-align:right;margin-left:-20px;'>
                Files
                <button type='button' id='XWinButton' onclick='_xwinclosewindow(2,"files")'>X</button>
              </div>
+        <div style='text-align:left;margin-left:8px;'>
+        <br>
+        <span class='material-icons filemgr_folder' title='Downloads'>folder</span>
+        <span class='material-icons filemgr_folder' title='Photos'>folder</span>
+        <span class='material-icons filemgr_folder' title='Music'>folder</span>
+        <span class='material-icons filemgr_folder' title='Videos'>folder</span>
+        </div>
            </div>
+     <div id="window3" style='user-select:none;'>
+           <div id="window3header" style='text-align:right;margin-left:-20px;'>
+           Settings
+           <button type='button' id='XWinButton' onclick='_xwinclosewindow(1,"terminal")'>X</button>
+           </div>
+       <div style='text-align:left;margin-left:4px;margin-right:4px;'>
+           <h2 class='thinheader'>Settings</h2>
+           <hr>
+         <button class='material-icons taskbarico' title='Wallpaper' onclick='bkgsel()'>wallpaper</button>
+         <button class='material-icons taskbarico' title='Battery' onclick='battery_settings()'>battery_full</button>
+       </div>
+         </div>
    </div>
    <footer id="taskbar">
      <span class="material-icons taskbarico" title='Apps'>apps</span>
      <span class='sep1'></span>
      <button class="material-icons taskbarico" style='color:rgb(80,205,235);margin-left:6px;' title='SearchParty' onclick='_xwinclosewindow(0,"searchParty")' type='button'>explore</button>
-     <button class="material-icons taskbarico" style='color:#FFF2B9;' title='Files' type='button'>folder</button>
+     <button class="material-icons taskbarico" style='color:#FFF2B9;' title='Files' type='button' onclick='_xwinclosewindow(2,"files")'>folder</button>
      <button class="material-icons taskbarico bkgblack" style='color:#FFFFFF;' title='Terminal' onclick='_xwinclosewindow(1,"terminal")' type='button'>chevron_right</button>
      <button class="material-icons taskbarico" style='color:rgb(160,160,160);' title='Settings' type='button'>settings</button>
     </footer>
@@ -169,11 +198,13 @@ progress{
     var searchPartyOpen=false;
     var filesOpen=false;
     var settingsOpen=false;
+    let batteryValue; // Define Battery Level for edit
     const lunaOSVersion=1;
   // Make the DIV an xwindow
 _xwinspawnwindow(document.getElementById("window0"));
 _xwinspawnwindow(document.getElementById("window1"));
 _xwinspawnwindow(document.getElementById("window2"));
+_xwinspawnwindow(document.getElementById("window3"));
 function DEVMODE_SETUP_TSK(){
   document.getElementById("body").innerHTML='<h1 class="thinheader">&ensp;Welcome to LunaOS</h1><hr style="color:white"><p>&ensp;One last thing. Do you want to enable DevMode? This will void any GitHub issue reports but enabled extra debbuging features and lets you sideload Lux Kernel Modules without any checks. <br><i>Hint: If you do not know what Lux Kernel is/want, do not enable DevMode!</i></p><div style="text-align:center;"><button type="button" class="confirm" onclick="localStorage.setItem(`LUNAOS_DEVMODE`,`ENABLED`);">Enable DevMode</button>&ensp;<button type="button" class="deny" onclick="localStorage.setItem(`LUNAOS_DEVMODE`,`DISABLED`">Do Not Enable DevMode</button></div>';
 }
@@ -181,7 +212,6 @@ function VFS_SETUP_TSK(){
      document.getElementById("body").innerHTML='<h1 class="thinheader">&ensp;Welcome to LunaOS</h1><hr style="color:white"><p>&ensp;Do you want a VFS Service enabled? It will store things in your browser which adds more functionality to LunaOS and certain apps.</p><div style="text-align:center;"><button type="button" class="confirm" onclick="localStorage.setItem(`VFS_SERVICE_STATUS`,`ENABLED`);DEVMODE_SETUP_TSK();">Enable VFS Service</button>&ensp;<button type="button" class="deny" onclick="localStorage.setItem(`VFS_SERVICE_STATUS`,`DISABLED`);DEVMODE_SETUP_TSK();">Disable VFS Service</button></div>'
    }
 function SETUP(){
-     
   if(localStorage.getItem("_LUNAOS_SETUP")=='COMPLETE'){
     console.log('[SETUP]: LunaOS is already setup. Ignoring...')
   }else{
@@ -190,7 +220,7 @@ function SETUP(){
 
   }
 } // This just checks if LunaOS is not setup
-
+function battery_settings(){} // Just battery settings
 // XWin Library 
 function _xwinclosewindow(window,task) {
   var x = document.getElementById("window"+window);
@@ -261,11 +291,21 @@ async function _SearchScraper(server,website){
 function _TerminalEXEC(cmd){
  if(terminalOpen===true){
   if(cmd=='help'){
-    return 'Just add JavaScript :)';
+    return 'Just add JavaScript ;)';
+  }else if(cmd=='squidkid'){
+    return 'Marie asked me to tell you to stay fresh!';
   }else{
   Function(cmd);
   }
  }
 } // Terminal Execution
+function gameMode(){
+console.log('Starting GameMode...');
+    terminalOpen=false;
+    searchPartyOpen=false;
+    filesOpen=false;
+    settingsOpen=false;
+console.log('GameMode Ready!');
+} // GameMode forces it so the game has most resources. 
   </script>
 </html>

@@ -274,9 +274,9 @@ async function _SearchScraper(server,website){
   if(website=='party:/index'){
     let fileref=document.createElement('script')
         fileref.setAttribute("type","text/javascript")
-        fileref.setAttribute("src", server+'/private/index.html') // Read Server, then call the imported function (which should be the website name but replace . with _)
+        fileref.setAttribute("src", server+'/private/index.js') // Read Server, then call the imported function (which should be the website name but replace . with _)
         let _funccall=website.replace(".", "_");
-        Function('"use strict";'+_funccall+'();'); // Execute Website Call
+        Function('"use strict";SSserverIndex();'); // Execute Website Call
   }
   else{
         let fileref=document.createElement('script')

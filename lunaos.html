@@ -64,6 +64,8 @@
 .taskbarico{
  font-size:2.5rem;
  user-select: none;
+ border:none;
+ background:none;
     }
     /* A seperator after the Apps Icon*/
 .sep1{
@@ -106,7 +108,7 @@ button:focus {
 .bkgblack{
       background:rgb(10,10,10);
       opacity:0.8;
-      border-radius:64px;
+      border-radius:256px;
 }
 progress{
  border-radius:0px;
@@ -115,11 +117,11 @@ progress{
 </head>
   
 <body id='body'>
-  <div id='SPLASH_LUNAOS' style='text-align:center;'>
+  <div id='SPLASH_LUNAOS' style='text-align:center;' hidden>
     <h1 class='material-icons' style='font-size:256px;color:rgb(215,215,0);'>dark_mode</h1>
     <h1>LunaOS 1.0</h1>
   </div>
-  <div id="page-container" hidden>
+  <div id="page-container">
    <div id="content-wrap">
      <!-- SearchParty 1.0 (Kinda Slow, Want to improve with 2.0) -->
      <div id="window0" hidden>
@@ -143,19 +145,25 @@ progress{
            <div style='background:rgb(20,20,30);color:white;font-family:monospace;height:100%;text-align:left;'>
            </div>
          </div>
+      <div id='window2'>
+             <div id="window2header" style='text-align:right;margin-left:-20px;'>
+               Files
+               <button type='button' id='XWinButton' onclick='_xwinclosewindow(2,"files")'>X</button>
+             </div>
+           </div>
    </div>
    <footer id="taskbar">
      <span class="material-icons taskbarico" title='Apps'>apps</span>
      <span class='sep1'></span>
-     <span class="material-icons taskbarico" style='color:rgb(80,205,235);margin-left:6px;' title='SearchParty' onclick='_xwinclosewindow(0,"searchParty")'>explore</span>
-     <span class="material-icons taskbarico" style='color:#FFF2B9;' title='Files'>folder</span>
-     <span class="material-icons taskbarico bkgblack" style='color:#FFFFFF;' title='Terminal' onclick='_xwinclosewindow(1,"terminal")'>chevron_right</span>
-     <span class="material-icons taskbarico" style='color:rgb(160,160,160);' title='Settings'>settings</span>
+     <button class="material-icons taskbarico" style='color:rgb(80,205,235);margin-left:6px;' title='SearchParty' onclick='_xwinclosewindow(0,"searchParty")' type='button'>explore</button>
+     <button class="material-icons taskbarico" style='color:#FFF2B9;' title='Files' type='button'>folder</button>
+     <button class="material-icons taskbarico bkgblack" style='color:#FFFFFF;' title='Terminal' onclick='_xwinclosewindow(1,"terminal")' type='button'>chevron_right</button>
+     <button class="material-icons taskbarico" style='color:rgb(160,160,160);' title='Settings' type='button'>settings</button>
     </footer>
 </body>
   <script>
-  // Splash Manager
-    setTimeout(() => {  document.getElementById("SPLASH_LUNAOS").style.display = "none"; document.getElementById("page-container").style.display = "block";}, 3000);
+  // Splash Manager (Skipped since we are debugging)
+  // setTimeout(() => {  document.getElementById("SPLASH_LUNAOS").style.display = "none"; document.getElementById("page-container").style.display = "block";}, 3000);
   // Global Vars
     var terminalOpen=false;
     var searchPartyOpen=false;
@@ -165,6 +173,7 @@ progress{
   // Make the DIV an xwindow
 _xwinspawnwindow(document.getElementById("window0"));
 _xwinspawnwindow(document.getElementById("window1"));
+_xwinspawnwindow(document.getElementById("window2"));
 function DEVMODE_SETUP_TSK(){
   document.getElementById("body").innerHTML='<h1 class="thinheader">&ensp;Welcome to LunaOS</h1><hr style="color:white"><p>&ensp;One last thing. Do you want to enable DevMode? This will void any GitHub issue reports but enabled extra debbuging features and lets you sideload Lux Kernel Modules without any checks. <br><i>Hint: If you do not know what Lux Kernel is/want, do not enable DevMode!</i></p><div style="text-align:center;"><button type="button" class="confirm" onclick="localStorage.setItem(`LUNAOS_DEVMODE`,`ENABLED`);">Enable DevMode</button>&ensp;<button type="button" class="deny" onclick="localStorage.setItem(`LUNAOS_DEVMODE`,`DISABLED`">Do Not Enable DevMode</button></div>';
 }

@@ -3,14 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <title>LunaOS</title>
   <style>
     body{
-      background:rgb(40,40,60);
+      background-image: linear-gradient(60deg, #29323c 0%, #485563 100%);
       color:white;
-      font-family:sans-serif;
+      font-family:'Open Sans', sans-serif;
       min-height:100vh;
       overflow:hidden;
       margin:0;
@@ -31,7 +33,7 @@
   left:0;
   width: 100%;
   height: 2.5rem;
-  background:rgba(20,20,20,0.8);
+  background:rgba(20,20,20,0.6);
   user-select: none;
   z-index:2;
 }
@@ -42,14 +44,17 @@
   background-color: #f1f1f1;
   color:black;
   height:480px;
+  width:576px;
   text-align: center;
+  resize: both;
+  overflow: hidden;
 }
 
 #window0header,#window1header,#window2header,#window3header,#window4header,#window5header,#window6header,#window7header {
   padding: 10px;
   cursor: move;
   z-index: 10;
-  width: 576px;
+  width: 100%;
   background-color: rgb(20,20,20);
   text-align:left; 
   color: #fff;
@@ -97,32 +102,56 @@ textarea:focus,
 button:focus {
     outline: none;
 }
-
+.bkgblack{
+      background:rgb(10,10,10);
+      opacity:0.8;
+      border-radius:64px;
+}
+progress{
+ border-radius:0px;
+}
   </style>
 </head>
 <body id='body'>
   <div id="page-container">
    <div id="content-wrap">
-     <!-- Now for the cool stuff. -->
-     <div id="window0">
-       <div id="window0header" style='text-align:right;'>
+     <!-- SearchParty 1.0 (Kinda Slow, Want to improve with 2.0) -->
+     <div id="window0" hidden>
+       <!-- -20px margin to fix overflow issue. Makes XWin Resizing work.-->
+       <div id="window0header" style='text-align:right;margin-left:-20px;'>
          SearchParty 1.0
          <button type='button' id='XWinButton' onclick='_xwinclosewindow(0)'>X</button>
        </div>
-  <input style='width:576px;'>
+       <div style='text-align:left;'>
+  <input style='width:100%;margin-left:-2px;' id='_SEARCHPARTYURL'>
+         <div id='_SEARCHPARTYCANVAS'>
+         </div>
+       </div>
 </div>
+     <!-- Cool Terminal App -->
+         <div id="window1">
+           <div id="window1header" style='text-align:right;margin-left:-20px;'>
+           Terminal
+           <button type='button' id='XWinButton' onclick='_xwinclosewindow(1)'>X</button>
+           </div>
+           <div style='background:rgb(20,20,30);color:white;font-family:monospace;height:100%;text-align:left;'>
+           
+           </div>
+         </div>
    </div>
    <footer id="taskbar">
      <span class="material-icons taskbarico" title='Apps'>apps</span>
      <span class='sep1'></span>
-     <span class="material-icons taskbarico" style='color:rgb(80,205,235);' title='SearchParty'>explore</span>
+     <span class="material-icons taskbarico" style='color:rgb(80,205,235);margin-left:6px;' title='SearchParty' onclick='_xwinclosewindow(0)'>explore</span>
      <span class="material-icons taskbarico" style='color:#FFF2B9;' title='Files'>folder</span>
+     <span class="material-icons taskbarico bkgblack" style='color:#FFFFFF;' title='Terminal' onclick='_xwinclosewindow(1)'>chevron_right</span>
      <span class="material-icons taskbarico" style='color:rgb(160,160,160);' title='Settings'>settings</span>
     </footer>
 </body>
   <script>
   // Make the DIV an xwindow
 _xwinspawnwindow(document.getElementById("window0"));
+_xwinspawnwindow(document.getElementById("window1"));
 function DEVMODE_SETUP_TSK(){
   document.getElementById("body").innerHTML='<h1 class="thinheader">&ensp;Welcome to LunaOS</h1><hr style="color:white"><p>&ensp;One last thing. Do you want to enable DevMode? This will void any GitHub issue reports but enabled extra debbuging features and lets you sideload Lux Kernel Modules without any checks. <br><i>Hint: If you do not know what Lux Kernel is/want, do not enable DevMode!</i></p><div style="text-align:center;"><button type="button" class="confirm" onclick="localStorage.setItem(`LUNAOS_DEVMODE`,`ENABLED`);">Enable DevMode</button>&ensp;<button type="button" class="deny" onclick="localStorage.setItem(`LUNAOS_DEVMODE`,`DISABLED`">Do Not Enable DevMode</button></div>';
 }
@@ -139,6 +168,8 @@ function SETUP(){
 
   }
 } // This just checks if LunaOS is not setup
+
+// XWin Library 
 function _xwinclosewindow(window) {
   var x = document.getElementById("window"+window);
   if (x.style.display === "none") {
@@ -147,8 +178,8 @@ function _xwinclosewindow(window) {
     x.style.display = "none";
   }
 } 
-function _xwinspawnwindow(elmnt) {
-  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+function _xwinspawnwindow(elmnt,windownum) {
+  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
   if (document.getElementById(elmnt.id + "header")) {
     // if present, the header is where you move the DIV from:
     document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
@@ -183,5 +214,23 @@ function _xwinspawnwindow(elmnt) {
     document.onmousemove = null;
   }
 }
+// SearchParty 1.0 Engine
+async function _SearchScraper(server,website){
+  if(website=='party:/index'){
+    let fileref=document.createElement('script')
+        fileref.setAttribute("type","text/javascript")
+        fileref.setAttribute("src", server+'/private/index.html') // Read Server, then call the imported function (which should be the website name but replace . with _)
+        let _funccall=website.replace(".", "_");
+        Function('"use strict";'+_funccall+'();'); // Execute Website Call
+  }
+  else{
+        let fileref=document.createElement('script')
+        fileref.setAttribute("type","text/javascript")
+        fileref.setAttribute("src", server+'/'+website) // Read Server, then call the imported function (which should be the website name but replace . with _)
+        let _funccall=website.replace(".", "_");
+        Function('"use strict";'+_funccall+'();'); // Execute Website Call
+  }
+} // Searches a Server for Website (Uses a stupid JS Based Call System, but I will see if SearchParty 2.0 has better speed)
+// Terminal Runner (Just a really basic script)  
   </script>
 </html>

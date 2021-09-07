@@ -151,7 +151,7 @@ font-size:48px;
            Terminal
            <button type='button' id='XWinButton' onclick='_xwinclosewindow(1,"terminal")'>X</button>
            </div>
-           <div style='background:rgb(20,20,30);color:white;font-family:monospace;height:100%;text-align:left;opacity:0;'>
+           <div style='background:rgb(20,20,30);color:white;font-family:monospace;height:100%;text-align:left;opacity:0;' id='TERMINAL_START'>
            </div>
          </div>
      <!-- File Manager (WIP) -->
@@ -168,10 +168,10 @@ font-size:48px;
         <span class='material-icons filemgr_folder' title='Videos'>folder</span>
         </div>
            </div>
-     <div id="window3" style='user-select:none;'>
+     <div id="window3" style='user-select:none;' hidden>
            <div id="window3header" style='text-align:right;margin-left:-20px;'>
            Settings
-           <button type='button' id='XWinButton' onclick='_xwinclosewindow(1,"terminal")'>X</button>
+           <button type='button' id='XWinButton' onclick='_xwinclosewindow(3,"settings")'>X</button>
            </div>
        <div style='text-align:left;margin-left:4px;margin-right:4px;'>
            <h2 class='thinheader'>Settings</h2>
@@ -187,7 +187,7 @@ font-size:48px;
      <button class="material-icons taskbarico" style='color:rgb(80,205,235);margin-left:6px;' title='SearchParty' onclick='_xwinclosewindow(0,"searchParty")' type='button'>explore</button>
      <button class="material-icons taskbarico" style='color:#FFF2B9;' title='Files' type='button' onclick='_xwinclosewindow(2,"files")'>folder</button>
      <button class="material-icons taskbarico bkgblack" style='color:#FFFFFF;' title='Terminal' onclick='_xwinclosewindow(1,"terminal")' type='button'>chevron_right</button>
-     <button class="material-icons taskbarico" style='color:rgb(160,160,160);' title='Settings' type='button'>settings</button>
+     <button class="material-icons taskbarico" style='color:rgb(160,160,160);' title='Settings' type='button' onclick='_xwinclosewindow(3,"settings")'>settings</button>
     </footer>
 </body>
   <script>
@@ -198,8 +198,9 @@ font-size:48px;
     var searchPartyOpen=false;
     var filesOpen=false;
     var settingsOpen=false;
-    let batteryValue; // Define Battery Level for edit
+    let batteryValue; // Define Battery Level!
     const lunaOSVersion=1;
+    const defaultServer='luna.microlemur.net'; // Default Server location (I am using the default server powered by Microlemur)
   // Make the DIV an xwindow
 _xwinspawnwindow(document.getElementById("window0"));
 _xwinspawnwindow(document.getElementById("window1"));
@@ -220,7 +221,11 @@ function SETUP(){
 
   }
 } // This just checks if LunaOS is not setup
-function battery_settings(){} // Just battery settings
+function battery_settings(){
+  if(settingsOpen==true){
+
+  }
+} // Just battery settings
 // XWin Library 
 function _xwinclosewindow(window,task) {
   var x = document.getElementById("window"+window);
@@ -288,6 +293,18 @@ async function _SearchScraper(server,website){
  }
 } // Searches a Server for Website (Uses a stupid JS Based Call System, but I will see if SearchParty 2.0 has better speed)
 // Terminal Runner (Just a really basic script)
+function _TerminalReturnCMD(e){
+  if(terminalOpen===true){
+      let _keynum;
+      let currentCMD='';
+      let inj=document.getElementById('TERMINAL_START');
+  if(e.which){                 
+    _keynum = e.which;
+    currentCMD+=_keynum;
+    inj.innerHTML+=_keynum;
+   }
+  }
+} // Returns a command typed (Super Cool m8!)
 function _TerminalEXEC(cmd){
  if(terminalOpen===true){
   if(cmd=='help'){

@@ -96,7 +96,9 @@ background:darkred;
 background:rgb(165,60,60);
 border:none;
 color:white;
-border-radius:8px;
+height:2.0rem;
+width:1rem;
+padding:0;
     }
 input:focus,
 select:focus,
@@ -136,7 +138,7 @@ font-size:48px;
        <!-- -20px margin to fix overflow issue. Makes XWin Resizing work.-->
        <div id="window0header" style='text-align:right;margin-left:-20px;'>
          SearchParty 1.0
-         <button type='button' id='XWinButton' onclick='_xwinclosewindow(0,"searchParty")'>X</button>
+         <button type='button' id='XWinButton' onclick='_xwinclosewindow(0,"searchParty")'>&ensp;</button>
          
        </div>
        <div style='text-align:left;'>
@@ -149,16 +151,17 @@ font-size:48px;
          <div id="window1" hidden>
            <div id="window1header" style='text-align:right;margin-left:-20px;'>
            Terminal
-           <button type='button' id='XWinButton' onclick='_xwinclosewindow(1,"terminal")'>X</button>
+           <button type='button' id='XWinButton' onclick='_xwinclosewindow(1,"terminal")'>&ensp;</button>
            </div>
-           <div style='background:rgb(20,20,30);color:white;font-family:monospace;height:100%;text-align:left;opacity:0;' id='TERMINAL_START'>
+           <div style='background:rgb(20,20,30);color:white;font-family:monospace;height:100%;text-align:left;' id='TERMINAL_START'>
+           
            </div>
          </div>
      <!-- File Manager (WIP) -->
-      <div id='window2' hidden>
+      <div id='window2'>
              <div id="window2header" style='text-align:right;margin-left:-20px;'>
                Files
-               <button type='button' id='XWinButton' onclick='_xwinclosewindow(2,"files")'>X</button>
+               <button type='button' id='XWinButton' onclick='_xwinclosewindow(2,"files")'>&ensp;</button>
              </div>
         <div style='text-align:left;margin-left:8px;'>
         <br>
@@ -171,7 +174,7 @@ font-size:48px;
      <div id="window3" style='user-select:none;' hidden>
            <div id="window3header" style='text-align:right;margin-left:-20px;'>
            Settings
-           <button type='button' id='XWinButton' onclick='_xwinclosewindow(3,"settings")'>X</button>
+           <button type='button' id='XWinButton' onclick='_xwinclosewindow(3,"settings")'>&ensp;</button>
            </div>
        <div style='text-align:left;margin-left:4px;margin-right:4px;'>
            <h2 class='thinheader'>Settings</h2>
@@ -236,8 +239,13 @@ function _xwinclosewindow(window,task) {
     x.style.display = "none";
     Function(task+"Open=false;")
   }
-} 
-function _xwinspawnwindow(elmnt,windownum) {
+}
+function _xwinmaxwindow(elmnt){
+ let _win = document.getElementById(elmnt.id);
+ _win.style.height = "35rem";
+ _win.style.width = "100%";
+} // Maximize for XWIN!!! :D
+function _xwinspawnwindow(elmnt) {
   let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
   if (document.getElementById(elmnt.id + "header")) {
     // if present, the header is where you move the DIV from:
@@ -245,7 +253,7 @@ function _xwinspawnwindow(elmnt,windownum) {
   } else {
     // otherwise, move the DIV from anywhere inside the DIV:
     elmnt.onmousedown = dragMouseDown;
-  } // TODO: ADD MULTI XWINDOWS
+  }
 
   function dragMouseDown(e) {
     e = e || window.event;

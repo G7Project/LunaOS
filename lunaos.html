@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet"> 
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="etc/css3/lunacss.css">
   <link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAj9//ADDE/wC66/8AAGaPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABERAAAAAAARCIiRAAAAAQiEREiQAAAQhETNEQkAABCETRAAEQABCETQAAABAAEITQAAAAAAAQhNAAAAAAABCFAAAAAAAAAQkAAAAAAAABCQAAAAAAAAAQkAAAAAAAAAERAAAAAAAAAAAAAAAAAAAAAAAAAAAD//wAA/D8AAPAPAADgBwAAwAMAAMBzAACB+wAAg/8AAIP/AACH/wAAx/8AAMf/AADj/wAA8f8AAP//AAD//wAA" rel="icon" type="image/x-icon" />
   <title>LunaOS</title>
 </head>
@@ -83,7 +84,9 @@
     </footer>
 </body>
   <script>
-  // Splash Manager (Skipped since we are debugging)
+  import * from 'lib/xwin.js'; // Import Everything from XWin because the library is super important.
+  import * from 'lib/kernel.js'; // Kernel is very important, loads after XWin does.
+  // Splash Manager
   setTimeout(() => {  document.getElementById("SPLASH_LUNAOS").style.display = "none"; document.getElementById("page-container").style.display = "block";}, 3000);
   // Global Vars
     var terminalOpen=false;
@@ -91,7 +94,7 @@
     var filesOpen=false;
     var settingsOpen=false;
     let batteryValue; // Define Battery Level! (UNLIMITED POWER)
-    let permissionsLevel=0; // -1:root, 0:user, 1:restricted, >=2:
+    let permissionsLevel=0; // -1:root, 0:user, 1:restricted, >=2:other (TO-DO: Merge with Lux Kernel)
     const lunaOSVersion=1;
     const defaultSearchServer='luna.microlemur.net'; // Default Server location (I am using the default server powered by Microlemur)
   // Make the DIV an xwindow
